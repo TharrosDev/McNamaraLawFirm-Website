@@ -13,7 +13,7 @@
   --color-line: #e6e1d4;
   --color-line-strong: #c9c1ad;
 
-  --font-serif: "Cormorant Garamond", "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   --shadow-sm: 0 1px 2px rgba(11, 37, 69, 0.06), 0 1px 3px rgba(11, 37, 69, 0.05);
@@ -34,6 +34,46 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--color-navy);
+  color: var(--color-cream);
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 200;
+}
+.skip-link:focus {
+  left: 12px;
+  top: 12px;
+  color: var(--color-cream);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0);
+  white-space: nowrap; border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal { opacity: 1 !important; transform: none !important; }
+}
 
 body {
   margin: 0;
@@ -268,11 +308,18 @@ p { margin: 0 0 1.1em; }
 .brand__mark::after {
   content: "";
   position: absolute;
-  inset: 4px;
+  inset: 3px;
   border-radius: 50%;
-  border: 1px solid var(--color-gold);
+  border: 1px solid rgba(212, 168, 95, 0.55);
+  pointer-events: none;
+}
+.brand__text {
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 1;
 }
 .brand__name {
+  display: block;
   font-family: var(--font-serif);
   font-size: 1.45rem;
   line-height: 1;
@@ -397,29 +444,52 @@ p { margin: 0 0 1.1em; }
 .hero__visual {
   position: relative;
   aspect-ratio: 4 / 5;
-  border-radius: 4px;
-  overflow: hidden;
-  box-shadow: var(--shadow-lg);
-  background: var(--color-navy);
+  max-width: 520px;
+  margin-left: auto;
+  width: 100%;
 }
 .hero__visual::before {
   content: "";
   position: absolute;
-  inset: -8% -8% auto auto;
-  width: 60%; height: 60%;
+  top: -22px;
+  right: -22px;
+  width: 60%;
+  height: 60%;
   border: 1px solid var(--color-gold);
-  border-radius: 4px;
-  z-index: -1;
-  transform: translate(20px, -20px);
+  border-radius: 2px;
+  pointer-events: none;
 }
-.hero__visual img {
+.hero__visual::after {
+  content: "";
+  position: absolute;
+  bottom: -22px;
+  left: -22px;
+  width: 45%;
+  height: 45%;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(11,37,69,0.22) 1px, transparent 0);
+  background-size: 14px 14px;
+  pointer-events: none;
+  opacity: 0.7;
+}
+.hero__visual__frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  background: var(--color-navy);
+  z-index: 1;
+}
+.hero__visual__frame img {
   width: 100%; height: 100%; object-fit: cover;
   filter: contrast(1.02) saturate(0.95);
 }
 
 .hero__badge {
   position: absolute;
-  left: -32px;
+  left: -28px;
   bottom: 40px;
   background: var(--color-white);
   padding: 22px 28px;
@@ -561,6 +631,8 @@ p { margin: 0 0 1.1em; }
   content: "→";
   transition: transform 0.3s var(--ease);
 }
+.service-card--centered { text-align: center; }
+.service-card--centered .service-card__icon { margin-left: auto; margin-right: auto; }
 .service-card:hover .service-card__link { color: var(--color-gold); }
 .service-card:hover .service-card__link::after { transform: translateX(4px); }
 
@@ -823,7 +895,37 @@ p { margin: 0 0 1.1em; }
   padding: 56px 48px;
   border: 1px solid var(--color-line);
 }
-.contact-form h3 { margin-bottom: 28px; }
+.contact-form h3 { margin-bottom: 12px; }
+.contact-form__intro {
+  color: var(--color-muted);
+  margin-bottom: 28px;
+}
+.contact-form__submit {
+  width: 100%;
+  justify-content: center;
+}
+.contact-info__intro {
+  color: rgba(255,255,255,0.78);
+  margin-bottom: 36px;
+}
+.detail__note {
+  color: var(--color-gold-light);
+  font-size: 0.92rem;
+}
+.section--map { padding-top: 0; background: var(--color-white); }
+.map-frame {
+  border: 1px solid var(--color-line);
+  overflow: hidden;
+  aspect-ratio: 21 / 9;
+  background: var(--color-cream-dark);
+}
+.map-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  filter: grayscale(0.2) contrast(1.02);
+}
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1001,6 +1103,41 @@ p { margin: 0 0 1.1em; }
   font-weight: 600;
 }
 
+/* ------- Credential cards (about page) ------- */
+.credential-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 28px;
+  margin-top: 32px;
+}
+.credential-card {
+  border-left: 2px solid var(--color-gold);
+  padding: 8px 0 8px 24px;
+}
+.credential-card h3 {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--color-navy);
+  margin-bottom: 8px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.credential-card p {
+  color: var(--color-muted);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* ------- Topstrip icons ------- */
+.topstrip__icon {
+  width: 14px; height: 14px;
+  display: inline-block;
+  vertical-align: -2px;
+  color: var(--color-gold-light);
+  margin-right: 6px;
+}
+
 /* ------- Reveal animation ------- */
 .reveal {
   opacity: 0;
@@ -1048,8 +1185,9 @@ p { margin: 0 0 1.1em; }
   }
   .nav__menu.open li { width: 100%; }
   .nav__menu.open a { display: block; padding: 14px 0; border-bottom: 1px solid var(--color-line); }
-  .hero__badge { left: 0; bottom: 0; transform: none; max-width: 240px; padding: 16px 20px; }
+  .hero__badge { left: 12px; bottom: 12px; max-width: 230px; padding: 14px 18px; }
   .hero__badge strong { font-size: 1.4rem; }
+  .hero__visual::before, .hero__visual::after { display: none; }
   .services { grid-template-columns: 1fr; }
   .process { grid-template-columns: 1fr; }
   .process__step { border-right: none; border-bottom: 1px solid var(--color-line); }

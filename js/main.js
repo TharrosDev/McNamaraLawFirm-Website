@@ -9,16 +9,23 @@
 
   const hamburger = document.querySelector('.hamburger');
   const navMenu = document.querySelector('.nav__menu');
+  const setMenuOpen = (open) => {
+    hamburger.classList.toggle('open', open);
+    navMenu.classList.toggle('open', open);
+    hamburger.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+  };
   if (hamburger && navMenu) {
+    hamburger.setAttribute('aria-expanded', 'false');
+    hamburger.setAttribute('aria-controls', 'primary-nav');
     hamburger.addEventListener('click', () => {
-      hamburger.classList.toggle('open');
-      navMenu.classList.toggle('open');
+      setMenuOpen(!hamburger.classList.contains('open'));
     });
     navMenu.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => {
-        hamburger.classList.remove('open');
-        navMenu.classList.remove('open');
-      });
+      a.addEventListener('click', () => setMenuOpen(false));
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && hamburger.classList.contains('open')) setMenuOpen(false);
     });
   }
 
